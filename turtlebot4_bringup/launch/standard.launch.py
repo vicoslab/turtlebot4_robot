@@ -63,11 +63,15 @@ def generate_launch_description():
         [pkg_turtlebot4_diagnostics, 'launch', 'diagnostics.launch.py'])
     rplidar_launch_file = PathJoinSubstitution(
         [pkg_turtlebot4_bringup, 'launch', 'rplidar.launch.py'])
-    oakd_launch_file = PathJoinSubstitution(
-        [pkg_turtlebot4_bringup, 'launch', 'oakd.launch.py'])
+    #oakd_launch_file = PathJoinSubstitution(
+        #[pkg_turtlebot4_bringup, 'launch', 'oakd.launch.py'])
+    oak_depth_launch_file = PathJoinSubstitution(
+        [pkg_turtlebot4_bringup, 'launch', 'pointcloud.launch.py'])
     description_launch_file = PathJoinSubstitution(
         [pkg_turtlebot4_description, 'launch', 'robot_description.launch.py']
     )
+    create3_relay_launch_file = PathJoinSubstitution(
+        [pkg_turtlebot4_bringup, 'launch', 'create3_relay.launch.py'])
 
     actions = [
             PushRosNamespace(namespace),
@@ -84,13 +88,20 @@ def generate_launch_description():
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([rplidar_launch_file])),
 
+            #IncludeLaunchDescription(
+                #PythonLaunchDescriptionSource([oakd_launch_file]),
+                #launch_arguments=[('camera', 'oakd_pro')]),
+
             IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([oakd_launch_file]),
-                launch_arguments=[('camera', 'oakd_pro')]),
+                PythonLaunchDescriptionSource([oak_depth_launch_file])),
 
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([description_launch_file]),
                 launch_arguments=[('model', 'standard')]),
+
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([create3_relay_launch_file]),
+                launch_arguments=[]),
         ]
 
     if (diagnostics_enable.perform(lc)) == '1':
