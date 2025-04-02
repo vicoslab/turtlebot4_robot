@@ -73,6 +73,9 @@ def generate_launch_description():
     create3_relay_launch_file = PathJoinSubstitution(
         [pkg_turtlebot4_bringup, 'launch', 'create3_relay.launch.py'])
 
+    piper_tts_launch_file = PathJoinSubstitution(
+        [pkg_turtlebot4_bringup, 'launch', 'piper_tts.launch.py'])
+
     actions = [
             PushRosNamespace(namespace),
 
@@ -94,6 +97,9 @@ def generate_launch_description():
 
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([oak_depth_launch_file])),
+
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([piper_tts_launch_file])),
 
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([description_launch_file]),
