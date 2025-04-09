@@ -75,6 +75,7 @@ def generate_launch_description():
             "params_file",
             default_value=os.path.join(bringup_prefix, "config", "pcl.yaml"),
         ),
+        DeclareLaunchArgument("rectify_rgb", default_value="False"),
         DeclareLaunchArgument("use_rviz", default_value="False"),
     ]
 
