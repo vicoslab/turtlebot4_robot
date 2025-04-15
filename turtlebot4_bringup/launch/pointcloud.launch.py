@@ -17,14 +17,14 @@ from launch_ros.descriptions import ComposableNode
 
 def launch_setup(context, *args, **kwargs):
     params_file = LaunchConfiguration("params_file")
-    depthai_prefix = get_package_share_directory("depthai_ros_driver")
+    tb4_prefix = get_package_share_directory("turtlebot4_bringup")
 
     name = LaunchConfiguration("name").perform(context)
 
     return [
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
-                os.path.join(depthai_prefix, "launch", "camera.launch.py")
+                os.path.join(tb4_prefix, "launch", "camera.launch.py")
             ),
             launch_arguments={
                 "name": name,
@@ -64,7 +64,7 @@ def generate_launch_description():
     
     declared_arguments = [
         DeclareLaunchArgument("name", default_value="oak"),
-        DeclareLaunchArgument("parent_frame", default_value="oak-d-base-frame"),
+        DeclareLaunchArgument("parent_frame", default_value="oakd_camera_bracket"),
         DeclareLaunchArgument("cam_pos_x", default_value="0.0"),
         DeclareLaunchArgument("cam_pos_y", default_value="0.0"),
         DeclareLaunchArgument("cam_pos_z", default_value="0.0"),
