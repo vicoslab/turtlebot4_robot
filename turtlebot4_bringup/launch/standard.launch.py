@@ -32,7 +32,7 @@ def generate_launch_description():
     lc = LaunchContext()
     ld = LaunchDescription()
 
-    diagnostics_enable = EnvironmentVariable('TURTLEBOT4_DIAGNOSTICS', default_value='1')
+    diagnostics_enable = EnvironmentVariable('TURTLEBOT4_DIAGNOSTICS', default_value='0')
     namespace = EnvironmentVariable('ROBOT_NAMESPACE', default_value='')
 
     pkg_turtlebot4_bringup = get_package_share_directory('turtlebot4_bringup')
@@ -55,19 +55,13 @@ def generate_launch_description():
         convert_types=True)
 
     # Launch files
-    turtlebot4_robot_launch_file = PathJoinSubstitution(
-        [pkg_turtlebot4_bringup, 'launch', 'robot.launch.py'])
-    joy_teleop_launch_file = PathJoinSubstitution(
-        [pkg_turtlebot4_bringup, 'launch', 'joy_teleop.launch.py'])
-    diagnostics_launch_file = PathJoinSubstitution(
-        [pkg_turtlebot4_diagnostics, 'launch', 'diagnostics.launch.py'])
-    rplidar_launch_file = PathJoinSubstitution(
-        [pkg_turtlebot4_bringup, 'launch', 'rplidar.launch.py'])
-    oakd_launch_file = PathJoinSubstitution(
-        [pkg_turtlebot4_bringup, 'launch', 'oakd.launch.py'])
-    description_launch_file = PathJoinSubstitution(
-        [pkg_turtlebot4_description, 'launch', 'robot_description.launch.py']
-    )
+    turtlebot4_robot_launch_file = PathJoinSubstitution([pkg_turtlebot4_bringup, 'launch', 'robot.launch.py'])
+    joy_teleop_launch_file = PathJoinSubstitution([pkg_turtlebot4_bringup, 'launch', 'joy_teleop.launch.py'])
+    diagnostics_launch_file = PathJoinSubstitution([pkg_turtlebot4_diagnostics, 'launch', 'diagnostics.launch.py'])
+    rplidar_launch_file = PathJoinSubstitution([pkg_turtlebot4_bringup, 'launch', 'rplidar.launch.py'])
+    oakd_launch_file = PathJoinSubstitution([pkg_turtlebot4_bringup, 'launch', 'gemini.launch.py'])
+    description_launch_file = PathJoinSubstitution([pkg_turtlebot4_description, 'launch', 'robot_description.launch.py'])
+    create3_relay_launch_file = PathJoinSubstitution([pkg_turtlebot4_bringup, 'launch', 'create3_relay.launch.py'])
 
     actions = [
             PushRosNamespace(namespace),
@@ -84,16 +78,16 @@ def generate_launch_description():
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([rplidar_launch_file])),
 
-            # Delay the OAK-D startup for a bit
+            # Delay the startup for a bit
             # This prevents spiking the current on the USB by having the lidar and camera
             # start up at the same time as everything else
             TimerAction(
-                period=30.0,
+                period=5.0,
                 actions=[
                     IncludeLaunchDescription(
                         PythonLaunchDescriptionSource([oakd_launch_file]),
                         launch_arguments=[
-                            ('camera', 'oakd_pro'),
+                            ('camera_name', 'gemini'),
                             ('namespace', namespace),
                         ])
                 ]
@@ -102,6 +96,11 @@ def generate_launch_description():
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([description_launch_file]),
                 launch_arguments=[('model', 'standard')]),
+
+
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([create3_relay_launch_file]),
+                launch_arguments=[]),
         ]
 
     if (diagnostics_enable.perform(lc)) == '1':
